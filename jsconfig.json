@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "target": "es2017",
+    "allowSyntheticDefaultImports": true
+  },
+
+  "include": [
+    "index.js",
+		"src/**/*",
+    "test/**/*",
+    "index.d.ts"
+  ]
+}
