@@ -1,7 +1,6 @@
 # Proxy-validation
 
-A very basic and simple validation utility that
-can be used as a helper when validating JS-objects.
+A very basic and simple validation utility that can be used as a helper when validating JS-objects.
 
 No smart built-in validators, because different business rules often requires custom validators.
 
@@ -30,7 +29,11 @@ const UserValidationFields = {
 
 class User extends Validator(UserValidationFields) {
   constructor(obj) {
+    super();
+
     this.name = obj.name;
+
+    return super.initializeValidation();
   }
 };
 
@@ -70,6 +73,10 @@ const UserValidationFields = {
 ```
 ```javascript
 class User extends Validator(UserValidationFields) {
+  constructor() {
+    super();
+    return super.initializeValidation();
+  }
 }
 
 const user = new User();
@@ -81,7 +88,7 @@ user.unknown = [] // Throws TypeError (Unknown field)
 
 ### Simple example #3 - Without using class
 
-Give that we have the `UserValidationFields` and required dependencies from  "Simple example #2":
+Given that we have the `UserValidationFields` and required dependencies from  "Simple example #2":
 ```javascript
 const EmailValidator = Validator({
   primaryEmail: UserValidationFields.email,
