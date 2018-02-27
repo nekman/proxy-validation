@@ -5,7 +5,10 @@ module.exports = class ProxyValidator {
    * @param {Validator.ValidationFields} validationFields
    */
   constructor(validationFields = {}) {
-    this.validationFields = validationFields;
+    Object.defineProperty(this, 'validationFields', {
+      enumerable: false,
+      get() { return validationFields; }
+    });
   }
 
   /**
@@ -98,8 +101,9 @@ module.exports = class ProxyValidator {
   /**
    * Create a instance by set properties from a plain object.
    *
-   * @param {Object} obj
-   * @return {ProxyValidator}
+   * @param {object} obj?
+   * @param {Validator.ValidationFields?} validationFields
+   * @return {Validator.ProxyValidator}
    */
   static from(obj = {}, validationFields = {}) {
     const validator = new ProxyValidator(validationFields);

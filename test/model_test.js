@@ -31,14 +31,17 @@ describe('Validator', () => {
     expect(string).to.equal('[object Object]');
   });
 
-  it('can serialize', () => {
+  it('serialize removes internal properties (validationFields)', () => {
     const user = new User({
       firstName: 'first',
       lastName: 'last'
     });
 
-    const copy = JSON.parse(JSON.stringify(user));
+    expect(user.validationFields).to.be.an('object');
+    expect('validationFields' in user).to.equal(true);
 
+    const copy = JSON.parse(JSON.stringify(user));
+    expect(copy.validationFields).to.equal(undefined);
     expect(copy.firstName).to.equal('first');
     expect(copy.lastName).to.equal('last');
   });
