@@ -1,8 +1,9 @@
 declare namespace Validator {
 
-  export default function ProxyValidatorFactory(validationFields: Object<string, Field>): ProxyValidator;
-
   export class ProxyValidator {
+    // Due to https://github.com/Microsoft/TypeScript/issues/3841
+    'constructor': typeof ProxyValidator;
+
     /**
      * Validates a instance properties by test them on the matching `ValidationFields`.
      *
@@ -11,13 +12,13 @@ declare namespace Validator {
      * @param allowExtraProperties
      *  if true, properties that don't exists in the `ValidationFields` is allowed.
      */ 
-    validate(ignoreUndefinedProperties = false, allowExtraProperties = false): ProxyValidator;
+    validate(ignoreUndefinedProperties = false, allowExtraProperties = false): this;
 
     /**
      * Wraps instance in a `Proxy` that intercepts all "set" and assigns on
      * the objects properties.
      */
-    initializeValidation(): ProxyValidator;
+    initializeValidation(): this;
 
     /**
      * Create a instance by set properties from a plain object.
@@ -42,5 +43,5 @@ declare namespace Validator {
 }
 
 declare module "proxy-validation" {
-  export = Validator;
+  export = (validationFields: Object<string, Field>) => Validator.ProxyValidator;
 }
