@@ -1,15 +1,11 @@
 # Proxy-validation
 
-A very basic and simple validation utility that can be used as a helper when validating JS-objects.
+A very basic and simple validation utility (almost more of a pattern than as a library) that can be used as a helper when validating JS-objects.
+No smart built-in validators because - different business rules often requires custom/special validators.
 
-No smart built-in validators, because different business rules often requires custom validators.
-
-Thats why you'll need to implement your own
-`validate` methods!
-
+You'll need to implement your own `validate` methods!
 
 ## Code examples
-
 
 ### Simple example #1:
 
@@ -35,7 +31,7 @@ class User extends Validator(UserValidationFields) {
 
     return super.initializeValidation();
   }
-};
+}
 
 const user = new User({ name: 'a name' });
 
@@ -60,7 +56,7 @@ const UserValidationFields = {
   email: {
     regexp: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,
     min: 5,
-    max: 200
+    max: 200,
     // Custom (naive) validation method.
     validate(value, field, propertyName) {
       StringValidator.validateField(value, field, propertyName);
@@ -70,8 +66,7 @@ const UserValidationFields = {
     }
   }
 };
-```
-```javascript
+
 class User extends Validator(UserValidationFields) {
   constructor() {
     super();
@@ -83,7 +78,7 @@ const user = new User();
 user.firstName = '1' // Throws RangeError (string should be between 3 and 10 characters)
 user.firstName = 1 // Throws TypeError (not a string)
 user.email = 's@@@@error'; // Throws TypeError (expected email to be a email address)
-user.unknown = [] // Throws TypeError (Unknown field)
+user.unknown = [] // Throws Error (Unknown field)
 ```
 
 ### Simple example #3 - Without using class
@@ -103,13 +98,11 @@ const emailSettings = EmailValidator.from({
 
 emailSettings.validate(); // OK
 
-const emailSettings2 = EmailValidator.from();
-emailSettings.primaryEmail = 'NOT_AN_EMAIL';
-// throws
-
+const otherEmailSettings = EmailValidator.from();
+otherEmailSettings.primaryEmail = 'NOT_AN_EMAIL';
 ```
 
-For more examples, see `/test`.
+For more examples, see <a href="https://github.com/nekman/proxy-validation/tree/master/test">/test</a>.
 
 ### Requirements
 Node 6+
@@ -120,6 +113,8 @@ Node 6+
 npm i
 # run tests
 npm test
+# lint
+npm run eslint
 # check coverage
 npm run coverage
 ```

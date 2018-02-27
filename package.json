@@ -4,6 +4,7 @@
   "description": "Super simple validation using ES6 Proxy object",
   "main": "index.js",
   "scripts": {
+    "eslint": "eslint -c .eslintrc ./index.js ./lib ./test",
     "test": "_mocha --recursive ./test/*_test.js",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha --recursive ./test/*_test.js"
   },
