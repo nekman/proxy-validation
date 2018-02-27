@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const Validator = require('../index');
+const ProxyValidator = require('../index');
 const { StringValidator } = require('../lib/validators');
 
 describe('Simple', () => {
@@ -24,9 +24,10 @@ describe('Simple', () => {
     }
   };
 
-  class User extends Validator(UserValidationFields) {
+  class User extends ProxyValidator {
     constructor() {
-      super();
+      super(UserValidationFields);
+
       return super.initializeValidation();
     }
   }
@@ -43,9 +44,9 @@ describe('Simple', () => {
       }
     };
 
-    class SimpleUser extends Validator(SimpleUserValidationFields) {
+    class SimpleUser extends ProxyValidator {
       constructor(obj) {
-        super();
+        super(SimpleUserValidationFields);
 
         this.name = obj.name;
 
@@ -88,19 +89,20 @@ describe('Simple', () => {
   describe('example #3', () => {
 
     it('can use validators for objects', () => {
-      const EmailValidator = Validator({
+      const emailValidationFields = {
         primaryEmail: UserValidationFields.email,
         secondaryEmail: UserValidationFields.email
-      });
+      };
 
-      const emailSettings = EmailValidator.from({
+      const emailObject = {
         primaryEmail: 'first@example.com',
         secondaryEmail: 'second@example.com'
-      });
+      };
 
+      const emailSettings = ProxyValidator.from(emailObject, emailValidationFields);
       emailSettings.validate(); // OK
 
-      const otherEmailSettings = EmailValidator.from();
+      const otherEmailSettings = ProxyValidator.from({}, emailValidationFields);
 
       expect(() => {
         otherEmailSettings.primaryEmail = 'NOT_AN_EMAIL';

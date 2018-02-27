@@ -7,8 +7,8 @@
 
   "include": [
     "index.js",
-		"src/**/*",
-    "test/**/*",
-    "index.d.ts"
+    "index.d.ts",
+		"lib/**/*",
+    "test/**/*"
   ]
 }

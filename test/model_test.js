@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const User = require('./models/user');
 const Role = require('./models/role');
-const Validator = require('../index');
+const ProxyValidator = require('../index');
 
 describe('Validator', () => {
 
@@ -159,7 +159,7 @@ describe('Validator', () => {
     });
 
     describe('Plain objects', () => {
-      it('can create validator objects without using "class"', () => {
+      it('can create validator without extending ProxyValidator', () => {
         const emptyFieldRule = {
           validate(value, field, name) {
             if (value !== '') {
@@ -168,9 +168,9 @@ describe('Validator', () => {
           }
         };
 
-        const emptyStringObject = Validator({ empty: emptyFieldRule }).from({
-          empty: 'not empty'
-        });
+        const emptyStringObject = ProxyValidator.from(
+          { empty: 'not empty' },
+          { empty: emptyFieldRule });
 
         expect(() => emptyStringObject.validate())
           .to.throw(TypeError, 'Expected field "empty" to be empty');
@@ -181,15 +181,13 @@ describe('Validator', () => {
           validate() { }
         };
 
-        const validator = Validator({ empty: validationField });
+        expect(() => {
+          ProxyValidator.from({ validate: '' }, { empty: validationField });
+        }).to.throw(TypeError, /Property "validate" is a reserved property in the validator/);
 
-        expect(() => validator.from({
-          validate: ''
-        })).to.throw(TypeError, /Property "validate" is a reserved property in the validator/);
-
-        expect(() => validator.from({
-          initializeValidation: ''
-        })).to.throw(TypeError, /Property "initializeValidation" is a reserved property in the validator/);
+        expect(() => {
+          ProxyValidator.from({ initializeValidation: '' }, { empty: validationField });
+        }).to.throw(TypeError, /Property "initializeValidation" is a reserved property in the validator/);
       });
     });
   });

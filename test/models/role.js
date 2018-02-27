@@ -1,4 +1,4 @@
-const Validator = require('../../index');
+const ProxyValidator = require('../../index');
 const { StringValidator } = require('../../lib/validators');
 
 const ValidationFields = {
@@ -9,9 +9,10 @@ const ValidationFields = {
   }
 };
 
-class Role extends Validator(ValidationFields) {
+class Role extends ProxyValidator {
   constructor(obj = {}) {
-    super();
+    super(ValidationFields);
+
     /** @type {string} */
     this.name = obj.name;
 

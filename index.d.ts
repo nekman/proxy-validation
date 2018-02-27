@@ -1,8 +1,11 @@
 declare namespace Validator {
 
   export class ProxyValidator {
-    // Due to https://github.com/Microsoft/TypeScript/issues/3841
-    'constructor': typeof ProxyValidator;
+    /**
+     *
+     * @param validationFields The validation fields to use
+     */
+    constructor(validationFields: ValidationFields): ProxyValidator;
 
     /**
      * Validates a instance properties by test them on the matching `ValidationFields`.
@@ -24,7 +27,11 @@ declare namespace Validator {
      * Create a instance by set properties from a plain object.
      * @param obj
      */
-    static from(obj = {}): ProxyValidator;
+    static from(obj?: any, validationFields: ValidationFields): ProxyValidator;
+  }
+
+  export interface ValidationFields {
+    [x: string]: Field;
   }
 
   export interface Field {
@@ -43,5 +50,5 @@ declare namespace Validator {
 }
 
 declare module "proxy-validation" {
-  export = (validationFields: Object<string, Field>) => Validator.ProxyValidator;
+  export = Validator.ProxyValidator;
 }

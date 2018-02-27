@@ -1,12 +1,13 @@
 {
   "name": "proxy-validation",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Super simple validation using ES6 Proxy object",
   "main": "index.js",
   "scripts": {
     "eslint": "eslint -c .eslintrc ./index.js ./lib ./test",
     "test": "_mocha --recursive ./test/*_test.js",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha --recursive ./test/*_test.js"
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha --recursive ./test/*_test.js",
+    "build-all": "npm i && npm run eslint && npm test && npm run coverage"
   },
   "repository": {
     "type": "git",

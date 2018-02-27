@@ -1,9 +1,9 @@
-const Validator = require('../../index');
+const ProxyValidator = require('../../index');
 const UserValidationFields = require('./user-validation-fields');
 
-module.exports = class User extends Validator(UserValidationFields) {
+module.exports = class User extends ProxyValidator {
   constructor(obj = {}) {
-    super();
+    super(UserValidationFields);
 
     /** @type {string} */
     this.email = obj.email;
