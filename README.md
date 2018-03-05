@@ -76,6 +76,15 @@ For more examples, see <a href="https://github.com/nekman/proxy-validation/tree/
 ### Requirements
 Node 6+
 
+### VSCode typings and intellisense
+If you use <a href="https://code.visualstudio.com/">VSCode</a>, add a  reference to <a href="https://github.com/nekman/proxy-validation/tree/master/index.d.ts">index.d.ts</a> to `jsconfig.json`
+to get typings support.
+```json
+"include": [
+  "node_modules/proxy-validation/index.d.ts"
+]
+```
+
 ### Developing
 ```bash
 # install dependencies
