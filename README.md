@@ -27,18 +27,6 @@ const user = ProxyValidation.from({}, UserValidationFields).initializeValidation
 
 user.validate(); // OK
 user.name = ''; // Throws TypeError: Cannot set name to ''
-
-const user2 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
-user2.name = null; // OK
-user2.validate(); // Throws TypeError: Cannot set name to null
-
-const user3 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
-user3.unknownField = 'foo';
-user3.validate(); // TypeError
-
-const user4 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
-user4.unknownField = 'foo';
-user4.validate({ allowExtraProperties: true, ignoreUndefinedProperties: true }); // OK
 ```
 
 ### Simple example #2 (using ES6 class):
@@ -68,7 +56,7 @@ const UserValidationFields = {
 };
 
 class User extends ProxyValidation {
-  constructor() {
+  constructor() 
     super(UserValidationFields);
 
     return super.initializeValidation();
@@ -80,6 +68,24 @@ user.firstName = '1'; // Throws RangeError (string should be between 3 and 10 ch
 user.firstName = 1; // Throws TypeError (not a string)
 user.email = 's@@@@error'; // Throws TypeError (expected email to be a email address)
 user.unknown = []; // Throws Error (Unknown field)
+```
+
+### Examples with validation options
+```javascript
+const user1 = ProxyValidation.from({}, UserValidationFields);
+user1.name = null; // OK
+user1.validate(); // TypeError: Cannot set name to null
+
+const user2 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
+user2.name = null; // TypeError: Cannot set name to null
+
+const user3 = ProxyValidation.from({ name: 'foo' }, UserValidationFields);
+user3.unknownField = 'bar';
+user3.validate({ allowExtraProperties: true }); // OK
+
+const user4 = ProxyValidation.from({}, UserValidationFields);
+user4.unknownField = 'bar';
+user4.validate({ allowExtraProperties: true, ignoreUndefinedProperties: true }); // OK
 ```
 
 For more examples, see <a href="https://github.com/nekman/proxy-validation/tree/master/test">/test</a>.
