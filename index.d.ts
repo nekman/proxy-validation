@@ -12,12 +12,9 @@ declare namespace Validation {
     /**
      * Validates a instance properties by test them on the matching `ValidationFields`.
      *
-     * @param ignoreUndefinedProperties
-     *  if true, `undefined` properties is ignored and will not be validated.
-     * @param allowExtraProperties
-     *  if true, properties that don't exists in the `ValidationFields` is allowed.
+     * @param options
      */ 
-    validate(ignoreUndefinedProperties = false, allowExtraProperties = false): T & ProxyValidation<T>;
+    validate(options?: ValidationOptions): T & ProxyValidation<T>;
 
     /**
      * Wraps instance in a `Proxy` that intercepts all "set" and assigns on
