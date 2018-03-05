@@ -1,6 +1,6 @@
 # Proxy-validation
 
-A very basic and simple validation utility (almost more of a pattern than a library) that can be used as a helper when validating JS-objects.
+A very basic and simple validation utility that can be used as a helper when validating JS-objects.
 No smart built-in validators because - different business rules often requires custom/special validators.
 
 You'll need to implement your own `validate` methods!
