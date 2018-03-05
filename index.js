@@ -1,8 +1,13 @@
-module.exports = class ProxyValidator {
+const defaultValidationOptions = {
+  ignoreUndefinedProperties: false,
+  allowExtraProperties: false
+};
+
+module.exports = class ProxyValidation {
 
   /**
    *
-   * @param {Validator.ValidationFields} validationFields
+   * @param {Validation.ValidationFields} validationFields
    * @param {boolean?} initializeValidation default false
    */
   constructor(validationFields = {}, initializeValidation = false) {
@@ -19,13 +24,15 @@ module.exports = class ProxyValidator {
   /**
    * Validates a instance properties by test them on the matching `ValidationFields`.
    *
-   * @param {boolean?} ignoreUndefinedProperties
-   *  if true, `undefined` properties is ignored and will not be validated.
-   * @param {boolean?} allowExtraProperties
-   *  if true, properties that don't exists in the `ValidationFields` is allowed.
+   * @param {Validation.ValidationOptions?} options
    * @return {this}
    */
-  validate(ignoreUndefinedProperties = false, allowExtraProperties = false) {
+  validate(options = defaultValidationOptions) {
+    const {
+      allowExtraProperties = defaultValidationOptions.allowExtraProperties,
+      ignoreUndefinedProperties = defaultValidationOptions.ignoreUndefinedProperties
+    } = options;
+
     // All validation properties that applies to the instance
     const validationKeys = Object.keys(this.validationFields);
     // All instance properties
@@ -49,7 +56,7 @@ module.exports = class ProxyValidator {
       })
       .every(key => {
         if (!(key in this.validationFields)) {
-          return false;
+          return allowExtraProperties;
         }
 
         const value = this[key];
@@ -107,16 +114,16 @@ module.exports = class ProxyValidator {
    * Create a instance by set properties from a plain object.
    *
    * @param {object} obj
-   * @param {Validator.ValidationFields?} validationFields
+   * @param {Validation.ValidationFields?} validationFields
    * @param {boolean?} initializeValidation default false
-   * @return {Validator.ProxyValidator}
+   * @return {Validation.ProxyValidation}
    */
   static from(obj = {}, validationFields = {}, initializeValidation = false) {
-    const validator = new ProxyValidator(validationFields, initializeValidation);
+    const validator = new ProxyValidation(validationFields, initializeValidation);
     Object.keys(obj).forEach(key => {
       // Validate so we don't overwrite existing validation methods...
       if (key in validator) {
-        throw new TypeError(`Property "${key}" is a reserved property in the validator.`);
+        throw new TypeError(`Property "${key}" is a reserved property.`);
       }
 
       validator[key] = obj[key];

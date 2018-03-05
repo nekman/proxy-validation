@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const ProxyValidator = require('../index');
+const ProxyValidation = require('../index');
 const { StringValidator } = require('../lib/validators');
 
 describe('Simple', () => {
@@ -24,7 +24,7 @@ describe('Simple', () => {
     }
   };
 
-  class User extends ProxyValidator {
+  class User extends ProxyValidation {
     constructor() {
       super(UserValidationFields);
 
@@ -44,7 +44,7 @@ describe('Simple', () => {
       }
     };
 
-    class SimpleUser extends ProxyValidator {
+    class SimpleUser extends ProxyValidation {
       constructor(obj) {
         super(SimpleUserValidationFields);
 
@@ -58,6 +58,20 @@ describe('Simple', () => {
       const user = new SimpleUser({ name: 'a name' }).validate();
 
       expect(user.name).to.equal('a name');
+      expect(() => {
+        user.name = '';
+      }).to.throw(TypeError, /Cannot set name to: /);
+    });
+
+    it('allow extra attributes', () => {
+      const user = ProxyValidation.from({ name: 'a name', unknown: true }, SimpleUserValidationFields)
+        .initializeValidation()
+        .validate({
+          allowExtraProperties: true
+        });
+
+      expect(user.name).to.equal('a name');
+      expect(user.unknown).to.equal(true);
       expect(() => {
         user.name = '';
       }).to.throw(TypeError, /Cannot set name to: /);
@@ -99,11 +113,11 @@ describe('Simple', () => {
         secondaryEmail: 'second@example.com'
       };
 
-      const emailSettings = ProxyValidator.from(emailObject, emailValidationFields);
+      const emailSettings = ProxyValidation.from(emailObject, emailValidationFields);
       emailSettings.validate(); // OK
 
       const initialize = true;
-      const otherEmailSettings = ProxyValidator.from({}, emailValidationFields, initialize);
+      const otherEmailSettings = ProxyValidation.from({}, emailValidationFields, initialize);
 
       expect(() => {
         otherEmailSettings.primaryEmail = 'NOT_AN_EMAIL';

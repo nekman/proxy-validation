@@ -5,7 +5,7 @@ const {
   ArrayValidator
 } = require('../../lib/validators');
 
-/** @type  {{ [x: string]: Validator.Field; }} ValidationFields */
+/** @type  {{ [x: string]: Validation.Field; }} ValidationFields */
 module.exports = {
   email: {
     min: 6,

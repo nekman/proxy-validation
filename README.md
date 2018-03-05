@@ -10,7 +10,7 @@ You'll need to implement your own `validate` methods!
 ### Simple example #1:
 
 ```javascript
-const Validator = require('proxy-validation');
+const ProxyValidation = require('proxy-validation');
 
 const UserValidationFields = {
   name: {
@@ -23,17 +23,28 @@ const UserValidationFields = {
   }
 };
 
-const user = Validator.from({}, UserValidationFields).initializeValidation();
-// or: Validator.from({}, UserValidationFields, true);
+const user = ProxyValidation.from({}, UserValidationFields).initializeValidation();
 
 user.validate(); // OK
 user.name = ''; // Throws TypeError: Cannot set name to ''
+
+const user2 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
+user2.name = null; // OK
+user2.validate(); // Throws TypeError: Cannot set name to null
+
+const user3 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
+user3.unknownField = 'foo';
+user3.validate(); // TypeError
+
+const user4 = ProxyValidation.from({}, UserValidationFields).initializeValidation();
+user4.unknownField = 'foo';
+user4.validate({ allowExtraProperties: true, ignoreUndefinedProperties: true }); // OK
 ```
 
 ### Simple example #2 (using ES6 class):
 
 ```javascript
-const Validator = require('proxy-validation');
+const ProxyValidation = require('proxy-validation');
 const { StringValidator } = require('proxy-validation/lib/validators');
 
 const UserValidationFields = {
@@ -56,7 +67,7 @@ const UserValidationFields = {
   }
 };
 
-class User extends Validator {
+class User extends ProxyValidation {
   constructor() {
     super(UserValidationFields);
 

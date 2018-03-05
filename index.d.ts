@@ -1,12 +1,13 @@
-declare namespace Validator {
+declare namespace Validation {
 
-  export class ProxyValidator<T> {
+  export class ProxyValidation<T extends object> {
+
     /**
      *
      * @param validationFields The validation fields to use
      * @param initializeValidation default `false`
      */
-    constructor(validationFields: ValidationFields, initializeValidation = false): ProxyValidator<T>;
+    constructor(validationFields: ValidationFields, initializeValidation = false): T & ProxyValidation<T>;
 
     /**
      * Validates a instance properties by test them on the matching `ValidationFields`.
@@ -16,13 +17,13 @@ declare namespace Validator {
      * @param allowExtraProperties
      *  if true, properties that don't exists in the `ValidationFields` is allowed.
      */ 
-    validate(ignoreUndefinedProperties = false, allowExtraProperties = false): this;
+    validate(ignoreUndefinedProperties = false, allowExtraProperties = false): T & ProxyValidation<T>;
 
     /**
      * Wraps instance in a `Proxy` that intercepts all "set" and assigns on
      * the objects properties.
      */
-    initializeValidation(): ProxyValidator<T>;
+    initializeValidation(): T & ProxyValidation<T>;
 
     /**
      * Create a instance by set properties from a plain object.
@@ -31,7 +32,15 @@ declare namespace Validator {
      * @param validationFields The validation fields to use
      * @param initializeValidation default `false`
      */
-    static from<T>(obj?: T, validationFields: ValidationFields, initializeValidation = false): ProxyValidator<T>;
+    static from<T>(obj?: T, validationFields: ValidationFields, initializeValidation = false): T & ProxyValidation<T>;
+  }
+
+  export interface ValidationOptions {
+    /** if true, `undefined` properties is ignored and will not be validated. */
+    ignoreUndefinedProperties?: boolean;
+
+    /** if true, properties that don't exists in the `ValidationFields` is allowed. */
+    allowExtraProperties?: boolean;
   }
 
   export interface ValidationFields {
@@ -54,5 +63,5 @@ declare namespace Validator {
 }
 
 declare module "proxy-validation" {
-  export = Validator.ProxyValidator;
+  export = Validation.ProxyValidation;
 }

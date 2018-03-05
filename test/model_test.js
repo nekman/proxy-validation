@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const User = require('./models/user');
 const Role = require('./models/role');
-const ProxyValidator = require('../index');
+const ProxyValidation = require('../index');
 
 describe('Validator', () => {
 
@@ -52,7 +52,7 @@ describe('Validator', () => {
     beforeEach(() => {
       options = {
         ignoreUndefinedProperties: true,
-        allowExtraProperties: true
+        allowExtraProperties: false
       };
     });
 
@@ -61,7 +61,7 @@ describe('Validator', () => {
         firstName: 'first'
       });
 
-      expect(() => user.validate(options.ignoreUndefinedProperties))
+      expect(() => user.validate(options))
         .not.to.throw();
     });
 
@@ -70,14 +70,14 @@ describe('Validator', () => {
         firstName: 1
       });
 
-      expect(() => user.validate(options.ignoreUndefinedProperties))
+      expect(() => user.validate(options))
         .to.throw(TypeError, /"firstName" must be a non empty string/);
 
       user = new User({
         firstName: '1'
       });
 
-      expect(() => user.validate(options.ignoreUndefinedProperties))
+      expect(() => user.validate(options))
         .to.throw(RangeError, /firstName should be between 3 and 50/);
 
       user = new User({
@@ -85,7 +85,7 @@ describe('Validator', () => {
       });
 
       expect(user.lastName).to.have.lengthOf(51);
-      expect(() => user.validate(options.ignoreUndefinedProperties))
+      expect(() => user.validate(options))
         .to.throw(RangeError, /lastName should be between 3 and 50/);
     });
 
@@ -95,13 +95,12 @@ describe('Validator', () => {
         extra: 'field'
       });
 
-      const { ignoreUndefinedProperties, allowExtraProperties } = options;
-
-      expect(() => role.validate(ignoreUndefinedProperties))
+      expect(() => role.validate(options))
         .to.throw(TypeError, /Only fields: name is allowed/);
 
 
-      expect(() => role.validate(ignoreUndefinedProperties, allowExtraProperties))
+      options.allowExtraProperties = true;
+      expect(() => role.validate(options))
         .not.to.throw();
 
       expect(role.extra).to.equal('field');
@@ -162,7 +161,7 @@ describe('Validator', () => {
     });
 
     describe('Plain objects', () => {
-      it('can create validator without extending ProxyValidator', () => {
+      it('can create validator without extending ProxyValidation', () => {
         const emptyFieldRule = {
           validate(value, field, name) {
             if (value !== '') {
@@ -171,7 +170,7 @@ describe('Validator', () => {
           }
         };
 
-        const emptyStringObject = ProxyValidator.from(
+        const emptyStringObject = ProxyValidation.from(
           { empty: 'not empty' },
           { empty: emptyFieldRule });
 
@@ -185,12 +184,12 @@ describe('Validator', () => {
         };
 
         expect(() => {
-          ProxyValidator.from({ validate: '' }, { empty: validationField });
-        }).to.throw(TypeError, /Property "validate" is a reserved property in the validator/);
+          ProxyValidation.from({ validate: '' }, { empty: validationField });
+        }).to.throw(TypeError, /Property "validate" is a reserved property./);
 
         expect(() => {
-          ProxyValidator.from({ initializeValidation: '' }, { empty: validationField });
-        }).to.throw(TypeError, /Property "initializeValidation" is a reserved property in the validator/);
+          ProxyValidation.from({ initializeValidation: '' }, { empty: validationField });
+        }).to.throw(TypeError, /Property "initializeValidation" is a reserved property./);
       });
 
       it('can enable validation when creating a new instance', () => {
@@ -200,10 +199,10 @@ describe('Validator', () => {
           }
         };
 
-        const initializeValidation = true;
+        const init = true;
 
         expect(() => {
-          ProxyValidator.from({ expected: 1 }, { expected: validationField }, initializeValidation);
+          ProxyValidation.from({ expected: 1 }, { expected: validationField }, init);
         }).to.throw(Error, /expected/);
       });
     });
