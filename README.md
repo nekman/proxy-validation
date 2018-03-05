@@ -23,7 +23,8 @@ const UserValidationFields = {
   }
 };
 
-const user = Validator.from({}, UserValidationFields);
+const user = Validator.from({}, UserValidationFields).initializeValidation();
+// or: Validator.from({}, UserValidationFields, true);
 
 user.validate(); // OK
 user.name = ''; // Throws TypeError: Cannot set name to ''
