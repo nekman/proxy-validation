@@ -4,8 +4,9 @@ declare namespace Validator {
     /**
      *
      * @param validationFields The validation fields to use
+     * @param initializeValidation default `false`
      */
-    constructor(validationFields: ValidationFields): ProxyValidator;
+    constructor(validationFields: ValidationFields, initializeValidation = false): ProxyValidator;
 
     /**
      * Validates a instance properties by test them on the matching `ValidationFields`.
@@ -25,9 +26,12 @@ declare namespace Validator {
 
     /**
      * Create a instance by set properties from a plain object.
-     * @param obj
+     *
+     * @param obj the object
+     * @param validationFields The validation fields to use
+     * @param initializeValidation default `false`
      */
-    static from(obj?: any, validationFields: ValidationFields): ProxyValidator;
+    static from(obj?: any, validationFields: ValidationFields, initializeValidation = false): ProxyValidator;
   }
 
   export interface ValidationFields {

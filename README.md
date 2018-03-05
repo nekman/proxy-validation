@@ -10,7 +10,7 @@ You'll need to implement your own `validate` methods!
 ### Simple example #1:
 
 ```javascript
-const ProxyValidator = require('proxy-validation');
+const Validator = require('proxy-validation');
 
 const UserValidationFields = {
   name: {
@@ -23,26 +23,16 @@ const UserValidationFields = {
   }
 };
 
-class User extends ProxyValidator {
-  constructor(obj) {
-    super(UserValidationFields);
+const user = Validator.from({}, UserValidationFields);
 
-    this.name = obj.name;
-
-    return super.initializeValidation();
-  }
-}
-
-const user = new User({ name: 'a name' });
 user.validate(); // OK
-
 user.name = ''; // Throws TypeError: Cannot set name to ''
 ```
 
-### Simple example #2:
+### Simple example #2 (using ES6 class):
 
 ```javascript
-const ProxyValidator = require('proxy-validation');
+const Validator = require('proxy-validation');
 const { StringValidator } = require('proxy-validation/lib/validators');
 
 const UserValidationFields = {
@@ -65,7 +55,7 @@ const UserValidationFields = {
   }
 };
 
-class User extends ProxyValidator {
+class User extends Validator {
   constructor() {
     super(UserValidationFields);
 
@@ -78,27 +68,6 @@ user.firstName = '1'; // Throws RangeError (string should be between 3 and 10 ch
 user.firstName = 1; // Throws TypeError (not a string)
 user.email = 's@@@@error'; // Throws TypeError (expected email to be a email address)
 user.unknown = []; // Throws Error (Unknown field)
-```
-
-### Simple example #3 - Without using class
-
-Given that we have the `UserValidationFields` and required dependencies from  "Simple example #2":
-```javascript
-const emailValidationFields = {
-  primaryEmail: UserValidationFields.email,
-  secondaryEmail: UserValidationFields.email
-};
-
-const emailObject = {
-  primaryEmail: 'first@example.com',
-  secondaryEmail: 'second@example.com'
-};
-
-const emailSettings = ProxyValidator.from(emailObject, emailValidationFields);
-emailSettings.validate(); // OK
-
-const otherEmailSettings = ProxyValidator.from({}, emailValidationFields);
-otherEmailSettings.primaryEmail = 'NOT_AN_EMAIL'; // TypeError
 ```
 
 For more examples, see <a href="https://github.com/nekman/proxy-validation/tree/master/test">/test</a>.

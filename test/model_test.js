@@ -192,6 +192,20 @@ describe('Validator', () => {
           ProxyValidator.from({ initializeValidation: '' }, { empty: validationField });
         }).to.throw(TypeError, /Property "initializeValidation" is a reserved property in the validator/);
       });
+
+      it('can enable validation when creating a new instance', () => {
+        const validationField = {
+          validate() {
+            throw new Error('expected');
+          }
+        };
+
+        const initializeValidation = true;
+
+        expect(() => {
+          ProxyValidator.from({ expected: 1 }, { expected: validationField }, initializeValidation);
+        }).to.throw(Error, /expected/);
+      });
     });
   });
 });

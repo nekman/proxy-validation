@@ -102,7 +102,8 @@ describe('Simple', () => {
       const emailSettings = ProxyValidator.from(emailObject, emailValidationFields);
       emailSettings.validate(); // OK
 
-      const otherEmailSettings = ProxyValidator.from({}, emailValidationFields);
+      const initialize = true;
+      const otherEmailSettings = ProxyValidator.from({}, emailValidationFields, initialize);
 
       expect(() => {
         otherEmailSettings.primaryEmail = 'NOT_AN_EMAIL';

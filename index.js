@@ -3,12 +3,17 @@ module.exports = class ProxyValidator {
   /**
    *
    * @param {Validator.ValidationFields} validationFields
+   * @param {boolean?} initializeValidation default false
    */
-  constructor(validationFields = {}) {
+  constructor(validationFields = {}, initializeValidation = false) {
     Object.defineProperty(this, 'validationFields', {
       enumerable: false,
       get() { return validationFields; }
     });
+
+    if (initializeValidation) {
+      return this.initializeValidation();
+    }
   }
 
   /**
@@ -101,12 +106,13 @@ module.exports = class ProxyValidator {
   /**
    * Create a instance by set properties from a plain object.
    *
-   * @param {object} obj?
+   * @param {object} obj
    * @param {Validator.ValidationFields?} validationFields
+   * @param {boolean?} initializeValidation default false
    * @return {Validator.ProxyValidator}
    */
-  static from(obj = {}, validationFields = {}) {
-    const validator = new ProxyValidator(validationFields);
+  static from(obj = {}, validationFields = {}, initializeValidation = false) {
+    const validator = new ProxyValidator(validationFields, initializeValidation);
     Object.keys(obj).forEach(key => {
       // Validate so we don't overwrite existing validation methods...
       if (key in validator) {
@@ -116,7 +122,7 @@ module.exports = class ProxyValidator {
       validator[key] = obj[key];
     });
 
-    return validator.initializeValidation();
+    return validator;
   }
 };
 
