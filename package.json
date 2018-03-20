@@ -1,8 +1,9 @@
 {
   "name": "proxy-validation",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Super simple validation using ES6 Proxy object",
   "main": "index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "eslint": "eslint -c .eslintrc ./index.js ./lib ./test",
     "test": "_mocha --recursive ./test/*_test.js",
