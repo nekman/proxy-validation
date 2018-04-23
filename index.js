@@ -44,7 +44,7 @@ module.exports = class ProxyValidation {
       throw new TypeError(`Only fields: ${validationKeys.join(',')} is allowed`);
     }
 
-    const hasAllAttributes = instanceKeys
+    const hasAllAttributes = validationKeys
       .filter(key => {
         // If `ignoreUndefinedProperties` is true, and the value is `undefined`, ignore
         // the key.

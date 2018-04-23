@@ -1,6 +1,6 @@
 {
   "name": "proxy-validation",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Super simple validation using ES6 Proxy object",
   "main": "index.js",
   "types": "./index.d.ts",
